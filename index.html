@@ -3,270 +3,1301 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantForge - Financial Intelligence API</title>
+  <title>QuantForge — Financial Intelligence API</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forge: {
+              green: '#00ff87',
+              teal:  '#00d4aa',
+              blue:  '#0ea5e9',
+              purple:'#8b5cf6',
+              red:   '#f43f5e',
+              gold:  '#f59e0b',
+            }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'marquee':       'marquee 30s linear infinite',
+            'marquee-slow':  'marquee 55s linear infinite',
+            'marquee-rev':   'marqueeRev 35s linear infinite',
+            'float':         'float 6s ease-in-out infinite',
+            'float-delay':   'float 6s ease-in-out 2s infinite',
+            'glow-pulse':    'glowPulse 3s ease-in-out infinite',
+            'slide-up':      'slideUp 0.7s ease forwards',
+            'fade-in':       'fadeIn 1s ease forwards',
+            'spin-slow':     'spin 20s linear infinite',
+            'counter':       'counter 2s ease-out forwards',
+            'scan':          'scan 3s linear infinite',
+            'blink':         'blink 1s step-end infinite',
+          },
+          keyframes: {
+            marquee:    { '0%': {transform:'translateX(0)'}, '100%': {transform:'translateX(-50%)'}},
+            marqueeRev: { '0%': {transform:'translateX(-50%)'}, '100%': {transform:'translateX(0)'}},
+            float:      { '0%,100%': {transform:'translateY(0)'}, '50%': {transform:'translateY(-18px)'}},
+            glowPulse:  { '0%,100%': {opacity:'0.6','box-shadow':'0 0 30px rgba(0,255,135,0.2)'}, '50%': {opacity:'1','box-shadow':'0 0 70px rgba(0,255,135,0.5)'}},
+            slideUp:    { '0%': {opacity:'0',transform:'translateY(40px)'}, '100%': {opacity:'1',transform:'translateY(0)'}},
+            fadeIn:     { '0%': {opacity:'0'}, '100%': {opacity:'1'}},
+            scan:       { '0%': {transform:'translateY(-100%)'}, '100%': {transform:'translateY(400%)'}},
+            blink:      { '0%,100%': {opacity:'1'}, '50%': {opacity:'0'}},
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --forge-green: #00ff87;
+      --forge-teal:  #00d4aa;
+      --forge-blue:  #0ea5e9;
+      --forge-glow:  rgba(0,255,135,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #030712;
+      color: #e5e7eb;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid bg ── */
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(0,255,135,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,135,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ── Glass ── */
     .glass {
       background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
+    .glass-strong {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    /* ── Glow borders ── */
+    .glow-green  { box-shadow: 0 0 0 1px rgba(0,255,135,0.3), 0 0 40px rgba(0,255,135,0.1); }
+    .glow-blue   { box-shadow: 0 0 0 1px rgba(14,165,233,0.3), 0 0 40px rgba(14,165,233,0.1); }
+    .glow-purple { box-shadow: 0 0 0 1px rgba(139,92,246,0.3), 0 0 40px rgba(139,92,246,0.1); }
+
+    .hover-glow-green:hover  { box-shadow: 0 0 0 1px rgba(0,255,135,0.6), 0 0 60px rgba(0,255,135,0.2); transition: box-shadow .3s; }
+    .hover-glow-blue:hover   { box-shadow: 0 0 0 1px rgba(14,165,233,0.6), 0 0 60px rgba(14,165,233,0.2); transition: box-shadow .3s; }
+    .hover-glow-purple:hover { box-shadow: 0 0 0 1px rgba(139,92,246,0.6), 0 0 60px rgba(139,92,246,0.2); transition: box-shadow .3s; }
+    .hover-glow-gold:hover   { box-shadow: 0 0 0 1px rgba(245,158,11,0.6), 0 0 60px rgba(245,158,11,0.2); transition: box-shadow .3s; }
+    .hover-glow-red:hover    { box-shadow: 0 0 0 1px rgba(244,63,94,0.6), 0 0 60px rgba(244,63,94,0.2); transition: box-shadow .3s; }
+
+    /* ── Gradient text ── */
+    .grad-green  { background: linear-gradient(135deg, #00ff87, #00d4aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .grad-blue   { background: linear-gradient(135deg, #0ea5e9, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .grad-gold   { background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .grad-all    { background: linear-gradient(135deg, #00ff87, #0ea5e9, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── Marquee ── */
+    .marquee-track { display: flex; width: max-content; }
+    .marquee-wrap  { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+
+    /* ── Animated border ── */
+    .animated-border {
+      position: relative;
+    }
+    .animated-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, #00ff87, #0ea5e9, #8b5cf6, #00ff87);
+      background-size: 300% 300%;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: gradMove 4s linear infinite;
+    }
+    @keyframes gradMove {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ── Scan line ── */
+    .scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,135,0.6), transparent);
+      animation: scan 3s linear infinite;
+      pointer-events: none;
+    }
+
+    /* ── Code block ── */
+    .code-block {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      background: #0a0f1a;
+      border: 1px solid rgba(0,255,135,0.12);
+      border-radius: 12px;
+    }
+    .code-key    { color: #00ff87; }
+    .code-val    { color: #93c5fd; }
+    .code-str    { color: #fbbf24; }
+    .code-num    { color: #f472b6; }
+    .code-method { color: #a78bfa; }
+    .code-url    { color: #34d399; }
+    .code-arrow  { color: #6b7280; }
+    .code-comment{ color: #4b5563; font-style: italic; }
+
+    /* ── Terminal ── */
+    .terminal {
+      background: #080d14;
+      border: 1px solid rgba(0,255,135,0.15);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .terminal-bar {
+      background: #0f1824;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+
+    /* ── Stat card ── */
+    .stat-num {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Ticker chip ── */
+    .ticker-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .ticker-chip .up   { color: #00ff87; }
+    .ticker-chip .down { color: #f43f5e; }
+
+    /* ── Nav ── */
+    .nav-link {
+      color: #9ca3af;
+      font-size: 0.875rem;
+      transition: color .2s;
+    }
+    .nav-link:hover { color: #00ff87; }
+
+    /* ── Step line ── */
+    .step-line { position: relative; }
+    .step-line::before {
+      content: '';
+      position: absolute;
+      left: 19px; top: 40px; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, rgba(0,255,135,0.4), transparent);
+    }
+
+    /* ── Endpoint row ── */
+    .endpoint-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.02);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      transition: all .2s;
+      cursor: pointer;
+    }
+    .endpoint-row:hover { border-color: rgba(0,255,135,0.3); background: rgba(0,255,135,0.04); }
+
+    .method-post { background: rgba(0,255,135,0.15); color: #00ff87; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.7rem; }
+    .method-get  { background: rgba(14,165,233,0.15); color: #0ea5e9; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.7rem; }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Pricing card ── */
+    .plan-card {
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+      transition: all .3s;
+    }
+    .plan-card:hover { transform: translateY(-4px); }
+    .plan-card.featured {
+      border-color: rgba(0,255,135,0.4);
+      background: rgba(0,255,135,0.04);
+    }
+
+    /* ── Check list ── */
+    .check-item::before {
+      content: '✓';
+      color: #00ff87;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #030712; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,135,0.3); border-radius: 3px; }
   </style>
 </head>
 
-<body class="bg-gray-950 text-gray-100 font-sans">
+<body>
 
-  <!-- NAV -->
-  <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800">
-    <h1 class="text-xl font-bold text-green-400">QuantForge</h1>
-    <div class="space-x-6 text-sm">
-      <a href="#" class="hover:text-green-400 transition">Docs</a>
-      <a href="#" class="hover:text-green-400 transition">Pricing</a>
-      <a href="#" class="bg-green-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-green-400 transition">
-        🚀 Try on RapidAPI
+
+<!-- ══════════════════════════════════════════
+  NAV
+══════════════════════════════════════════ -->
+<header class="sticky top-0 z-50 glass-strong border-b border-gray-800/60">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+    <div class="flex items-center gap-3">
+      <!-- Logo mark -->
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-forge-green to-forge-teal flex items-center justify-center">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 12L6 6L9 9L12 4L14 6" stroke="#030712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="text-lg font-bold tracking-tight text-white">Quant<span class="grad-green">Forge</span></span>
+    </div>
+
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#endpoints" class="nav-link">API</a>
+      <a href="#agents" class="nav-link">AI Agents</a>
+      <a href="#pricing" class="nav-link">Pricing</a>
+      <a href="#" class="nav-link">Docs</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="#" class="text-sm text-gray-400 hover:text-white transition px-4 py-2">Sign In</a>
+      <a href="#" class="text-sm font-semibold bg-forge-green text-gray-950 px-5 py-2 rounded-lg hover:brightness-110 transition">
+        Get API Key
       </a>
     </div>
-  </header>
 
-  <!-- HERO -->
-  <section class="text-center py-24 px-6 max-w-6xl mx-auto relative">
+  </div>
+</header>
 
-    <div class="absolute inset-0 bg-gradient-to-r from-green-500/10 via-blue-500/10 to-purple-500/10 blur-3xl"></div>
 
-    <h2 class="relative text-5xl font-bold leading-tight">
-      Build Trading & Risk Intelligence  
-      <br>
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
-        Without Quant Teams
-      </span>
+<!-- ══════════════════════════════════════════
+  HERO
+══════════════════════════════════════════ -->
+<section class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-16 pb-32 bg-grid overflow-hidden">
+
+  <!-- Radial glows -->
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-forge-green/8 blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-blue-500/6 blur-[100px] rounded-full pointer-events-none"></div>
+  <div class="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-purple-500/6 blur-[100px] rounded-full pointer-events-none"></div>
+
+  <!-- Badge -->
+  <div class="relative mb-6 animate-fade-in">
+    <div class="inline-flex items-center gap-2 glass border border-forge-green/20 rounded-full px-4 py-2 text-sm">
+      <span class="w-2 h-2 rounded-full bg-forge-green animate-pulse"></span>
+      <span class="text-forge-green font-medium">Now live on RapidAPI</span>
+      <span class="text-gray-500">— Financial Intelligence API</span>
+    </div>
+  </div>
+
+  <!-- Headline -->
+  <h1 class="relative text-5xl md:text-7xl font-black leading-[1.05] tracking-tight max-w-5xl animate-slide-up">
+    Build Trading Intelligence<br>
+    <span class="grad-green">Without Quant Teams</span>
+  </h1>
+
+  <p class="relative mt-6 text-gray-400 text-xl max-w-2xl leading-relaxed" style="animation: slideUp .7s .15s ease forwards; opacity:0;">
+    Options pricing, Greeks, risk analytics &amp; strategy APIs —
+    designed for <span class="text-white font-medium">AI agents</span> and
+    <span class="text-white font-medium">developer-first</span> financial systems.
+  </p>
+
+  <!-- CTA buttons -->
+  <div class="relative mt-10 flex flex-wrap justify-center gap-4" style="animation: slideUp .7s .3s ease forwards; opacity:0;">
+    <a href="#" class="group inline-flex items-center gap-2 bg-forge-green text-gray-950 font-bold px-8 py-4 rounded-xl hover:brightness-110 transition-all hover:scale-105 text-base">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+      Try the API Free
+    </a>
+    <a href="#endpoints" class="inline-flex items-center gap-2 glass border border-gray-700 font-semibold px-8 py-4 rounded-xl hover:border-forge-green/60 transition-all text-base">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+      View Endpoints
+    </a>
+  </div>
+
+  <!-- Hero code terminal -->
+  <div class="relative mt-20 w-full max-w-4xl mx-auto" style="animation: slideUp .7s .45s ease forwards; opacity:0;">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot bg-red-500"></div>
+        <div class="dot bg-yellow-500"></div>
+        <div class="dot bg-green-500"></div>
+        <span class="ml-2 text-gray-500 text-xs font-mono">quantforge — api call</span>
+        <div class="ml-auto flex gap-2 text-xs font-mono">
+          <span class="text-forge-green">● LIVE</span>
+        </div>
+      </div>
+      <div class="relative overflow-hidden">
+        <div class="scan-line"></div>
+        <div class="grid md:grid-cols-2 divide-x divide-gray-800/50">
+          <!-- Request -->
+          <div class="p-6">
+            <div class="text-xs text-gray-600 uppercase tracking-widest mb-4 font-mono">Request</div>
+            <pre class="text-sm font-mono leading-relaxed"><span class="code-method">POST</span> <span class="code-url">https://api.quantforge.io/v2/option-price</span>
+
+<span class="code-arrow">{</span>
+  <span class="code-key">"underlying"</span>: <span class="code-str">"AAPL"</span>,
+  <span class="code-key">"spot"</span>:       <span class="code-num">185.50</span>,
+  <span class="code-key">"strike"</span>:     <span class="code-num">190.00</span>,
+  <span class="code-key">"expiry"</span>:     <span class="code-str">"2024-04-19"</span>,
+  <span class="code-key">"vol"</span>:        <span class="code-num">0.28</span>,
+  <span class="code-key">"type"</span>:       <span class="code-str">"call"</span>,
+  <span class="code-key">"model"</span>:      <span class="code-str">"black_scholes"</span>
+<span class="code-arrow">}</span></pre>
+          </div>
+          <!-- Response -->
+          <div class="p-6">
+            <div class="text-xs text-gray-600 uppercase tracking-widest mb-4 font-mono">Response <span class="text-forge-green">200 OK</span></div>
+            <pre class="text-sm font-mono leading-relaxed"><span class="code-arrow">{</span>
+  <span class="code-key">"price"</span>:        <span class="code-num">4.82</span>,
+  <span class="code-key">"greeks"</span>: <span class="code-arrow">{</span>
+    <span class="code-key">"delta"</span>:  <span class="code-num">0.3847</span>,
+    <span class="code-key">"gamma"</span>:  <span class="code-num">0.0291</span>,
+    <span class="code-key">"theta"</span>:  <span class="code-num">-0.124</span>,
+    <span class="code-key">"vega"</span>:   <span class="code-num">0.2183</span>,
+    <span class="code-key">"rho"</span>:    <span class="code-num">0.0847</span>
+  <span class="code-arrow">}</span>,
+  <span class="code-key">"iv"</span>:          <span class="code-num">0.2812</span>,
+  <span class="code-key">"latency_ms"</span>:  <span class="code-num">12</span>
+<span class="code-arrow">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating badges -->
+    <div class="absolute -top-3 -right-3 glass border border-forge-green/30 rounded-lg px-3 py-1.5 text-xs font-mono text-forge-green animate-float">
+      ⚡ 12ms latency
+    </div>
+    <div class="absolute -bottom-3 -left-3 glass border border-blue-400/30 rounded-lg px-3 py-1.5 text-xs font-mono text-blue-400 animate-float-delay">
+      99.9% uptime
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  MARQUEE — ASSET CLASSES
+══════════════════════════════════════════ -->
+<div class="py-12 border-y border-gray-800/60 overflow-hidden bg-gray-950/50">
+  <div class="text-center text-xs text-gray-600 uppercase tracking-widest mb-6 font-mono">Supported instruments &amp; models</div>
+  <div class="marquee-wrap">
+    <div class="marquee-track animate-marquee-slow">
+      <div class="flex gap-6 px-6 items-center">
+        <span class="text-gray-400 font-medium px-4 py-2">Vanilla Options</span><span class="text-gray-700">·</span>
+        <span class="text-forge-green font-mono text-sm">Black-Scholes</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Exotic Options</span><span class="text-gray-700">·</span>
+        <span class="text-blue-400 font-mono text-sm">Binomial Tree</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">FX Derivatives</span><span class="text-gray-700">·</span>
+        <span class="text-purple-400 font-mono text-sm">Monte Carlo</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Interest Rate Swaps</span><span class="text-gray-700">·</span>
+        <span class="text-yellow-400 font-mono text-sm">Heston Model</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Bond Pricing</span><span class="text-gray-700">·</span>
+        <span class="text-forge-green font-mono text-sm">SABR Vol</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Equity Options</span><span class="text-gray-700">·</span>
+        <span class="text-blue-400 font-mono text-sm">Local Volatility</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Commodities</span><span class="text-gray-700">·</span>
+        <span class="text-red-400 font-mono text-sm">VaR / CVaR</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Portfolio Greeks</span><span class="text-gray-700">·</span>
+        <span class="text-purple-400 font-mono text-sm">Stress Testing</span><span class="text-gray-700">·</span>
+        <!-- duplicate -->
+        <span class="text-gray-400 font-medium px-4 py-2">Vanilla Options</span><span class="text-gray-700">·</span>
+        <span class="text-forge-green font-mono text-sm">Black-Scholes</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Exotic Options</span><span class="text-gray-700">·</span>
+        <span class="text-blue-400 font-mono text-sm">Binomial Tree</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">FX Derivatives</span><span class="text-gray-700">·</span>
+        <span class="text-purple-400 font-mono text-sm">Monte Carlo</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Interest Rate Swaps</span><span class="text-gray-700">·</span>
+        <span class="text-yellow-400 font-mono text-sm">Heston Model</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Bond Pricing</span><span class="text-gray-700">·</span>
+        <span class="text-forge-green font-mono text-sm">SABR Vol</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Equity Options</span><span class="text-gray-700">·</span>
+        <span class="text-blue-400 font-mono text-sm">Local Volatility</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Commodities</span><span class="text-gray-700">·</span>
+        <span class="text-red-400 font-mono text-sm">VaR / CVaR</span><span class="text-gray-700">·</span>
+        <span class="text-gray-400 font-medium px-4 py-2">Portfolio Greeks</span><span class="text-gray-700">·</span>
+        <span class="text-purple-400 font-mono text-sm">Stress Testing</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+  PROBLEM SECTION
+══════════════════════════════════════════ -->
+<section class="py-28 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-16 reveal">
+      <div class="text-forge-green text-sm font-mono uppercase tracking-widest mb-3">The Problem</div>
+      <h2 class="text-4xl md:text-5xl font-bold text-white">Quant finance is powerful.<br><span class="text-gray-500">But brutally painful.</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 reveal">
+
+      <div class="glass border border-gray-800 rounded-2xl p-6 hover:border-red-500/40 hover:-translate-y-1 transition-all duration-300">
+        <div class="text-3xl mb-4">📐</div>
+        <h3 class="font-semibold text-white mb-2">Brutal Math</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Stochastic calculus, PDEs, and numerical methods — months to implement correctly.</p>
+      </div>
+
+      <div class="glass border border-gray-800 rounded-2xl p-6 hover:border-orange-500/40 hover:-translate-y-1 transition-all duration-300">
+        <div class="text-3xl mb-4">👨‍🔬</div>
+        <h3 class="font-semibold text-white mb-2">Quant Bottleneck</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Every feature blocked on PhD quants. Build cycles measured in quarters, not days.</p>
+      </div>
+
+      <div class="glass border border-gray-800 rounded-2xl p-6 hover:border-yellow-500/40 hover:-translate-y-1 transition-all duration-300">
+        <div class="text-3xl mb-4">📊</div>
+        <h3 class="font-semibold text-white mb-2">Excel Doesn't Scale</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Spreadsheets break at volume, can't be called by AI agents, and fail in production.</p>
+      </div>
+
+      <div class="glass border border-gray-800 rounded-2xl p-6 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300">
+        <div class="text-3xl mb-4">🔌</div>
+        <h3 class="font-semibold text-white mb-2">No Decision APIs</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Libraries exist, but nothing that returns structured decisions ready for automation.</p>
+      </div>
+
+    </div>
+
+    <!-- Arrow down -->
+    <div class="flex justify-center my-12 reveal">
+      <div class="flex flex-col items-center gap-2 text-gray-700">
+        <div class="w-px h-12 bg-gradient-to-b from-gray-800 to-forge-green/50"></div>
+        <div class="text-forge-green text-sm font-mono">QuantForge solves this</div>
+        <div class="w-px h-12 bg-gradient-to-b from-forge-green/50 to-transparent"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  STATS
+══════════════════════════════════════════ -->
+<section class="py-16 border-y border-gray-800/60 bg-gray-950/60">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center reveal">
+
+      <div>
+        <div class="stat-num grad-green" data-target="12">12</div>
+        <div class="text-gray-500 text-sm mt-2 font-mono">ms avg latency</div>
+      </div>
+      <div>
+        <div class="stat-num grad-blue">99.9<span class="text-3xl">%</span></div>
+        <div class="text-gray-500 text-sm mt-2 font-mono">uptime SLA</div>
+      </div>
+      <div>
+        <div class="stat-num grad-gold">40<span class="text-3xl">+</span></div>
+        <div class="text-gray-500 text-sm mt-2 font-mono">API endpoints</div>
+      </div>
+      <div>
+        <div class="stat-num text-white">5<span class="text-3xl grad-green">M+</span></div>
+        <div class="text-gray-500 text-sm mt-2 font-mono">calls / month</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  FEATURES
+══════════════════════════════════════════ -->
+<section id="features" class="py-28 px-6">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="text-center mb-20 reveal">
+      <div class="text-forge-green text-sm font-mono uppercase tracking-widest mb-3">Capabilities</div>
+      <h2 class="text-4xl md:text-5xl font-bold">Everything you need to build<br>financial intelligence</h2>
+      <p class="mt-4 text-gray-500 text-lg max-w-2xl mx-auto">A complete quant finance toolkit, accessible through clean REST APIs. No PhDs required.</p>
+    </div>
+
+    <!-- Feature grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Options Engine -->
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover-glow-green hover:-translate-y-1 transition-all duration-300 reveal">
+        <div class="w-12 h-12 rounded-xl bg-forge-green/10 border border-forge-green/20 flex items-center justify-center mb-5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <h3 class="text-forge-green font-bold text-lg mb-2">Options Engine</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Full Black-Scholes, Binomial Tree, Monte Carlo, and Heston model pricing with all Greeks computed in a single call.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs bg-forge-green/10 text-forge-green border border-forge-green/20 rounded-full px-3 py-1">Delta</span>
+          <span class="text-xs bg-forge-green/10 text-forge-green border border-forge-green/20 rounded-full px-3 py-1">Gamma</span>
+          <span class="text-xs bg-forge-green/10 text-forge-green border border-forge-green/20 rounded-full px-3 py-1">Vega</span>
+          <span class="text-xs bg-forge-green/10 text-forge-green border border-forge-green/20 rounded-full px-3 py-1">Theta</span>
+          <span class="text-xs bg-forge-green/10 text-forge-green border border-forge-green/20 rounded-full px-3 py-1">Rho</span>
+        </div>
+      </div>
+
+      <!-- Strategy Builder -->
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover-glow-blue hover:-translate-y-1 transition-all duration-300 reveal">
+        <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <h3 class="text-blue-400 font-bold text-lg mb-2">Strategy Builder</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Analyze any multi-leg options strategy — payoff diagrams, breakeven points, max profit/loss, and probability of profit.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full px-3 py-1">Spreads</span>
+          <span class="text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full px-3 py-1">Straddles</span>
+          <span class="text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full px-3 py-1">Butterflies</span>
+          <span class="text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full px-3 py-1">Condors</span>
+        </div>
+      </div>
+
+      <!-- Risk Analytics -->
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover-glow-red hover:-translate-y-1 transition-all duration-300 reveal">
+        <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3 class="text-red-400 font-bold text-lg mb-2">Risk Analytics</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Value-at-Risk, Expected Shortfall, stress testing, and scenario analysis for portfolios of any size or complexity.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 rounded-full px-3 py-1">VaR</span>
+          <span class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 rounded-full px-3 py-1">CVaR / ES</span>
+          <span class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 rounded-full px-3 py-1">Stress Tests</span>
+        </div>
+      </div>
+
+      <!-- Volatility Surface -->
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover-glow-purple hover:-translate-y-1 transition-all duration-300 reveal">
+        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        </div>
+        <h3 class="text-purple-400 font-bold text-lg mb-2">Volatility Surface</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Construct and query implied volatility surfaces. Calibrate SABR, SVI, and Heston models to market data.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full px-3 py-1">SABR</span>
+          <span class="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full px-3 py-1">SVI</span>
+          <span class="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full px-3 py-1">IV Smile</span>
+        </div>
+      </div>
+
+      <!-- Multi-Asset -->
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover-glow-gold hover:-translate-y-1 transition-all duration-300 reveal">
+        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        </div>
+        <h3 class="text-yellow-400 font-bold text-lg mb-2">Multi-Asset Coverage</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Equities, FX, fixed income, commodities, and crypto. Unified API surface across all asset classes.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-full px-3 py-1">Equities</span>
+          <span class="text-xs bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-full px-3 py-1">FX</span>
+          <span class="text-xs bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-full px-3 py-1">Bonds</span>
+          <span class="text-xs bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-full px-3 py-1">Crypto</span>
+        </div>
+      </div>
+
+      <!-- Bond Analytics -->
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover-glow-green hover:-translate-y-1 transition-all duration-300 reveal">
+        <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mb-5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <h3 class="text-teal-400 font-bold text-lg mb-2">Fixed Income</h3>
+        <p class="text-gray-500 text-sm leading-relaxed mb-4">Bond pricing, yield-to-maturity, duration, convexity, and interest rate sensitivity analytics.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-full px-3 py-1">Duration</span>
+          <span class="text-xs bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-full px-3 py-1">YTM</span>
+          <span class="text-xs bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-full px-3 py-1">Convexity</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  ENDPOINTS SHOWCASE
+══════════════════════════════════════════ -->
+<section id="endpoints" class="py-28 px-6 bg-gray-950/60 border-y border-gray-800/60">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-16 reveal">
+      <div class="text-forge-green text-sm font-mono uppercase tracking-widest mb-3">API Reference</div>
+      <h2 class="text-4xl md:text-5xl font-bold">Powerful endpoints.<br><span class="grad-green">Simple interface.</span></h2>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8 items-start">
+
+      <!-- Endpoint list -->
+      <div class="space-y-3 reveal">
+        <div class="text-xs text-gray-600 uppercase tracking-widest font-mono mb-4">Available Endpoints</div>
+
+        <div class="endpoint-row active-endpoint" onclick="showEndpoint('price')">
+          <span class="method-post">POST</span>
+          <span class="text-gray-300">/v2/option-price</span>
+          <span class="ml-auto text-gray-600 text-xs">BSM · Binomial · MC</span>
+        </div>
+        <div class="endpoint-row" onclick="showEndpoint('greeks')">
+          <span class="method-post">POST</span>
+          <span class="text-gray-300">/v2/greeks</span>
+          <span class="ml-auto text-gray-600 text-xs">Δ Γ Θ ν ρ</span>
+        </div>
+        <div class="endpoint-row" onclick="showEndpoint('strategy')">
+          <span class="method-post">POST</span>
+          <span class="text-gray-300">/v2/strategy/analyze</span>
+          <span class="ml-auto text-gray-600 text-xs">Multi-leg</span>
+        </div>
+        <div class="endpoint-row" onclick="showEndpoint('risk')">
+          <span class="method-post">POST</span>
+          <span class="text-gray-300">/v2/risk/portfolio</span>
+          <span class="ml-auto text-gray-600 text-xs">VaR · ES</span>
+        </div>
+        <div class="endpoint-row" onclick="showEndpoint('vol')">
+          <span class="method-post">POST</span>
+          <span class="text-gray-300">/v2/volatility/surface</span>
+          <span class="ml-auto text-gray-600 text-xs">SABR · SVI</span>
+        </div>
+        <div class="endpoint-row" onclick="showEndpoint('bond')">
+          <span class="method-post">POST</span>
+          <span class="text-gray-300">/v2/bond/price</span>
+          <span class="ml-auto text-gray-600 text-xs">Fixed income</span>
+        </div>
+        <div class="endpoint-row" onclick="showEndpoint('implied')">
+          <span class="method-post">POST</span>
+          <span class="text-gray-300">/v2/implied-vol</span>
+          <span class="ml-auto text-gray-600 text-xs">IV solver</span>
+        </div>
+        <div class="endpoint-row" onclick="showEndpoint('health')">
+          <span class="method-get">GET</span>
+          <span class="text-gray-300">/v2/health</span>
+          <span class="ml-auto text-gray-600 text-xs">Status</span>
+        </div>
+      </div>
+
+      <!-- Code panel -->
+      <div class="terminal reveal" id="endpointPanel">
+        <div class="terminal-bar">
+          <div class="dot bg-red-500"></div>
+          <div class="dot bg-yellow-500"></div>
+          <div class="dot bg-green-500"></div>
+          <span class="ml-2 text-gray-500 text-xs font-mono" id="endpointTitle">POST /v2/option-price</span>
+        </div>
+        <div class="p-6 font-mono text-sm leading-relaxed" id="endpointCode">
+          <span class="code-comment">// Option Pricing Request</span><br><br>
+          <span class="code-method">POST</span> <span class="code-url">/v2/option-price</span><br>
+          <span class="code-key">Authorization:</span> <span class="code-str">Bearer YOUR_API_KEY</span><br><br>
+          <span class="code-arrow">{</span><br>
+          &nbsp;&nbsp;<span class="code-key">"spot"</span>: <span class="code-num">185.50</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"expiry"</span>: <span class="code-str">"2024-04-19"</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"vol"</span>: <span class="code-num">0.28</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"rate"</span>: <span class="code-num">0.053</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"type"</span>: <span class="code-str">"call"</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"model"</span>: <span class="code-str">"black_scholes"</span><br>
+          <span class="code-arrow">}</span><br><br>
+          <span class="code-comment">// → { "price": 4.82, "delta": 0.38, ... }</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  AI AGENTS SECTION
+══════════════════════════════════════════ -->
+<section id="agents" class="py-28 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Left: content -->
+      <div class="reveal">
+        <div class="text-forge-green text-sm font-mono uppercase tracking-widest mb-4">AI-First Design</div>
+        <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+          The computation engine for<br>
+          <span class="grad-all">AI Trading Agents</span>
+        </h2>
+        <p class="text-gray-400 text-lg leading-relaxed mb-8">
+          QuantForge is built from the ground up to be called by AI agents. Structured JSON in, structured decisions out. No ambiguity, no hallucination — deterministic quantitative finance.
+        </p>
+
+        <!-- Steps -->
+        <div class="space-y-6">
+          <div class="step-line flex gap-4">
+            <div class="w-10 h-10 rounded-full bg-forge-green/10 border border-forge-green/40 flex items-center justify-center text-forge-green font-bold text-sm shrink-0">1</div>
+            <div>
+              <div class="font-semibold text-white mb-1">Agent calls pricing API</div>
+              <div class="text-gray-500 text-sm">Get real-time option prices and Greeks without writing any math.</div>
+            </div>
+          </div>
+          <div class="step-line flex gap-4">
+            <div class="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">2</div>
+            <div>
+              <div class="font-semibold text-white mb-1">Evaluate strategy outcomes</div>
+              <div class="text-gray-500 text-sm">Simulate payoffs, breakevens, and probabilities across scenarios.</div>
+            </div>
+          </div>
+          <div class="step-line flex gap-4">
+            <div class="w-10 h-10 rounded-full bg-purple-500/10 border border-purple-500/40 flex items-center justify-center text-purple-400 font-bold text-sm shrink-0">3</div>
+            <div>
+              <div class="font-semibold text-white mb-1">Assess portfolio risk</div>
+              <div class="text-gray-500 text-sm">Compute VaR, exposure, and stress tests before execution.</div>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-full bg-yellow-500/10 border border-yellow-500/40 flex items-center justify-center text-yellow-400 font-bold text-sm shrink-0">4</div>
+            <div>
+              <div class="font-semibold text-white mb-1">Execute with confidence</div>
+              <div class="text-gray-500 text-sm">AI agent makes a data-driven, quantitatively-backed decision.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: agent flow terminal -->
+      <div class="reveal">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="dot bg-red-500"></div>
+            <div class="dot bg-yellow-500"></div>
+            <div class="dot bg-green-500"></div>
+            <span class="ml-2 text-gray-500 text-xs font-mono">trading-agent.py — live</span>
+          </div>
+          <div class="p-6 font-mono text-sm leading-relaxed space-y-1">
+            <div><span class="text-gray-600">[09:31:02]</span> <span class="text-forge-green">→</span> Agent initialized: AAPL options session</div>
+            <div><span class="text-gray-600">[09:31:03]</span> <span class="text-blue-400">↑</span> POST /v2/option-price {spot: 185.50, ...}</div>
+            <div><span class="text-gray-600">[09:31:03]</span> <span class="text-forge-green">✓</span> price: <span class="text-forge-green">4.82</span>, delta: <span class="text-forge-green">0.384</span> <span class="text-gray-600">[12ms]</span></div>
+            <div><span class="text-gray-600">[09:31:04]</span> <span class="text-blue-400">↑</span> POST /v2/strategy/analyze {type: "bull_call_spread"}</div>
+            <div><span class="text-gray-600">[09:31:04]</span> <span class="text-forge-green">✓</span> max_profit: <span class="text-forge-green">$840</span>, breakeven: <span class="text-yellow-400">$191.30</span></div>
+            <div><span class="text-gray-600">[09:31:05]</span> <span class="text-blue-400">↑</span> POST /v2/risk/portfolio {positions: [...]}</div>
+            <div><span class="text-gray-600">[09:31:05]</span> <span class="text-forge-green">✓</span> 95% VaR: <span class="text-red-400">$1,240</span>, ES: <span class="text-red-400">$1,890</span></div>
+            <div class="mt-3 pt-3 border-t border-gray-800">
+              <span class="text-gray-600">[09:31:06]</span> <span class="text-purple-400">🤖</span> Agent decision: <span class="text-forge-green font-bold">BUY</span> 5x Apr-19 190C
+            </div>
+            <div><span class="text-gray-600">[09:31:06]</span> <span class="text-gray-500">risk within limits · strategy positive EV</span></div>
+            <div class="mt-2"><span class="text-forge-green">█<span class="animate-blink">_</span></span></div>
+          </div>
+        </div>
+
+        <!-- Integration chips -->
+        <div class="mt-6 flex flex-wrap gap-3">
+          <div class="glass border border-gray-800 rounded-lg px-4 py-2 text-sm flex items-center gap-2">
+            <span class="text-forge-green">⬡</span>
+            <span class="text-gray-400">LangChain</span>
+          </div>
+          <div class="glass border border-gray-800 rounded-lg px-4 py-2 text-sm flex items-center gap-2">
+            <span class="text-blue-400">◈</span>
+            <span class="text-gray-400">OpenAI Agents</span>
+          </div>
+          <div class="glass border border-gray-800 rounded-lg px-4 py-2 text-sm flex items-center gap-2">
+            <span class="text-purple-400">✦</span>
+            <span class="text-gray-400">Claude</span>
+          </div>
+          <div class="glass border border-gray-800 rounded-lg px-4 py-2 text-sm flex items-center gap-2">
+            <span class="text-yellow-400">⚙</span>
+            <span class="text-gray-400">AutoGen</span>
+          </div>
+          <div class="glass border border-gray-800 rounded-lg px-4 py-2 text-sm flex items-center gap-2">
+            <span class="text-teal-400">▶</span>
+            <span class="text-gray-400">CrewAI</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  MARQUEE — TECH / INTEGRATIONS (reverse)
+══════════════════════════════════════════ -->
+<div class="py-10 border-y border-gray-800/40 overflow-hidden bg-gray-950/40">
+  <div class="marquee-wrap">
+    <div class="marquee-track animate-marquee-rev">
+      <div class="flex gap-8 px-6 items-center">
+        <span class="text-gray-600 font-mono text-sm px-3">Python SDK</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Node.js SDK</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">REST API</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">WebSocket Stream</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">OpenAPI 3.0</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Postman Collection</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">RapidAPI</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">AWS Lambda</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Vercel Edge</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Docker</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Jupyter Notebooks</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Google Colab</span>
+        <span class="text-gray-800">|</span>
+        <!-- dup -->
+        <span class="text-gray-600 font-mono text-sm px-3">Python SDK</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Node.js SDK</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">REST API</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">WebSocket Stream</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">OpenAPI 3.0</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Postman Collection</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">RapidAPI</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">AWS Lambda</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Vercel Edge</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Docker</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Jupyter Notebooks</span>
+        <span class="text-gray-800">|</span>
+        <span class="text-gray-600 font-mono text-sm px-3">Google Colab</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+  USE CASES
+══════════════════════════════════════════ -->
+<section class="py-28 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-16 reveal">
+      <div class="text-forge-green text-sm font-mono uppercase tracking-widest mb-3">Use Cases</div>
+      <h2 class="text-4xl md:text-5xl font-bold">Built for builders in finance</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 reveal">
+
+      <div class="animated-border glass rounded-2xl p-7">
+        <div class="text-4xl mb-4">🤖</div>
+        <h3 class="font-bold text-lg text-white mb-3">Algorithmic Trading</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Power systematic trading strategies with real-time pricing, Greeks, and risk checks in every tick loop.</p>
+        <ul class="mt-4 space-y-1 text-sm text-gray-400">
+          <li class="check-item">Options market making</li>
+          <li class="check-item">Delta hedging automation</li>
+          <li class="check-item">Spread trading signals</li>
+        </ul>
+      </div>
+
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover:border-blue-500/30 transition-all">
+        <div class="text-4xl mb-4">🏦</div>
+        <h3 class="font-bold text-lg text-white mb-3">Fintech Platforms</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Embed institutional-grade quant analytics into retail-facing apps without building a quant team.</p>
+        <ul class="mt-4 space-y-1 text-sm text-gray-400">
+          <li class="check-item">Options analytics dashboards</li>
+          <li class="check-item">Portfolio risk monitoring</li>
+          <li class="check-item">Strategy education tools</li>
+        </ul>
+      </div>
+
+      <div class="glass border border-gray-800 rounded-2xl p-7 hover:border-purple-500/30 transition-all">
+        <div class="text-4xl mb-4">🔬</div>
+        <h3 class="font-bold text-lg text-white mb-3">Quant Research</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Accelerate research workflows by offloading computation to the API and focusing on alpha generation.</p>
+        <ul class="mt-4 space-y-1 text-sm text-gray-400">
+          <li class="check-item">Backtesting infrastructure</li>
+          <li class="check-item">Model calibration</li>
+          <li class="check-item">Scenario analysis</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  PRICING
+══════════════════════════════════════════ -->
+<section id="pricing" class="py-28 px-6 bg-gray-950/60 border-y border-gray-800/60">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="text-center mb-16 reveal">
+      <div class="text-forge-green text-sm font-mono uppercase tracking-widest mb-3">Pricing</div>
+      <h2 class="text-4xl md:text-5xl font-bold">Simple. Transparent. Scalable.</h2>
+      <p class="mt-4 text-gray-500 text-lg">Start free. Pay as you grow.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 reveal">
+
+      <!-- Starter -->
+      <div class="plan-card">
+        <div class="text-sm text-gray-500 font-mono uppercase tracking-wider mb-4">Starter</div>
+        <div class="text-5xl font-black text-white mb-1">Free</div>
+        <div class="text-gray-500 text-sm mb-6">500 calls / month</div>
+        <ul class="space-y-3 text-sm mb-8">
+          <li class="check-item text-gray-400">Options pricing (BSM)</li>
+          <li class="check-item text-gray-400">Basic Greeks</li>
+          <li class="check-item text-gray-400">Community support</li>
+          <li class="check-item text-gray-400">RapidAPI access</li>
+        </ul>
+        <a href="#" class="block text-center border border-gray-700 hover:border-forge-green/50 text-white font-semibold py-3 rounded-xl transition-all">Get Started Free</a>
+      </div>
+
+      <!-- Pro (featured) -->
+      <div class="plan-card featured relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-forge-green text-gray-950 text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
+        <div class="text-sm text-forge-green font-mono uppercase tracking-wider mb-4">Pro</div>
+        <div class="text-5xl font-black text-white mb-1">$49<span class="text-2xl text-gray-400 font-normal">/mo</span></div>
+        <div class="text-gray-500 text-sm mb-6">50,000 calls / month</div>
+        <ul class="space-y-3 text-sm mb-8">
+          <li class="check-item text-gray-300">All Starter features</li>
+          <li class="check-item text-gray-300">Advanced models (Heston, MC)</li>
+          <li class="check-item text-gray-300">Strategy analyzer</li>
+          <li class="check-item text-gray-300">Portfolio risk (VaR/ES)</li>
+          <li class="check-item text-gray-300">Volatility surface</li>
+          <li class="check-item text-gray-300">Priority support</li>
+        </ul>
+        <a href="#" class="block text-center bg-forge-green text-gray-950 font-bold py-3 rounded-xl hover:brightness-110 transition-all">Start Pro Trial</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="plan-card">
+        <div class="text-sm text-gray-500 font-mono uppercase tracking-wider mb-4">Enterprise</div>
+        <div class="text-5xl font-black text-white mb-1">Custom</div>
+        <div class="text-gray-500 text-sm mb-6">Unlimited calls</div>
+        <ul class="space-y-3 text-sm mb-8">
+          <li class="check-item text-gray-400">All Pro features</li>
+          <li class="check-item text-gray-400">Dedicated infrastructure</li>
+          <li class="check-item text-gray-400">SLA guarantees</li>
+          <li class="check-item text-gray-400">Custom models</li>
+          <li class="check-item text-gray-400">White-label option</li>
+          <li class="check-item text-gray-400">Dedicated engineer</li>
+        </ul>
+        <a href="#" class="block text-center border border-gray-700 hover:border-purple-400/50 text-white font-semibold py-3 rounded-xl transition-all">Contact Sales</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+  CTA
+══════════════════════════════════════════ -->
+<section class="py-32 px-6 relative overflow-hidden">
+
+  <div class="absolute inset-0 bg-gradient-to-r from-forge-green/5 via-blue-500/5 to-purple-500/5"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-forge-green/8 blur-[100px] rounded-full"></div>
+
+  <div class="relative max-w-3xl mx-auto text-center reveal">
+    <div class="text-forge-green text-sm font-mono uppercase tracking-widest mb-4">Get Started</div>
+    <h2 class="text-5xl md:text-6xl font-black mb-6 leading-tight">
+      Start building<br>
+      <span class="grad-all">financial intelligence</span><br>
+      today.
     </h2>
-
-    <p class="mt-4 text-green-400 text-sm">
-      Designed for AI agents and developer-first trading systems
+    <p class="text-gray-400 text-xl mb-10 max-w-xl mx-auto leading-relaxed">
+      Instant access on RapidAPI. No credit card required. 500 free calls to explore the full API.
     </p>
-
-    <p class="mt-4 text-gray-400 text-lg relative">
-      Pricing, Greeks, strategies, and risk analytics — all in simple APIs.
-    </p>
-
-    <div class="mt-10 flex justify-center gap-4 relative">
-      <button class="bg-green-500 text-black px-6 py-3 rounded-lg font-semibold hover:bg-green-400 transition transform hover:scale-105">
-        🚀 Try API
-      </button>
-      <button class="border border-gray-700 px-6 py-3 rounded-lg hover:border-green-400 transition">
-        📘 View Docs
-      </button>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="#" class="inline-flex items-center gap-3 bg-forge-green text-gray-950 font-bold px-10 py-4 rounded-xl hover:brightness-110 transition-all hover:scale-105 text-lg animate-glow-pulse">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+        Launch on RapidAPI
+      </a>
+      <a href="#" class="inline-flex items-center gap-3 glass border border-gray-700 font-semibold px-10 py-4 rounded-xl hover:border-forge-green/40 transition-all text-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Read the Docs
+      </a>
     </div>
+  </div>
+</section>
 
-    <!-- INTERACTIVE CODE -->
-    <div class="mt-14 glass border border-gray-800 rounded-xl p-6 text-left text-sm max-w-3xl mx-auto">
 
-      <div class="flex gap-4 mb-4 text-xs">
-        <button onclick="switchTab('price')" class="tab-btn text-green-400">Option Price</button>
-        <button onclick="switchTab('strategy')" class="tab-btn text-gray-400">Strategy</button>
-        <button onclick="switchTab('risk')" class="tab-btn text-gray-400">Risk</button>
-      </div>
+<!-- ══════════════════════════════════════════
+  FOOTER
+══════════════════════════════════════════ -->
+<footer class="border-t border-gray-800/60 py-16 px-6 bg-gray-950">
+  <div class="max-w-6xl mx-auto">
 
-<pre id="codeBlock"><code>
-POST /option-price
+    <div class="grid md:grid-cols-4 gap-10 mb-12">
 
-{
-  "spot": 100,
-  "strike": 100
-}
-
-→
-
-{
-  "price": 10.45,
-  "delta": 0.52
-}
-</code></pre>
-
-    </div>
-  </section>
-
-  <!-- PROBLEM -->
-  <section class="py-20 text-center border-t border-gray-800">
-    <h3 class="text-3xl font-semibold">Quant finance is powerful — but painful</h3>
-
-    <div class="mt-10 grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-      <div class="p-4 hover:bg-gray-900 rounded-lg transition">Complex math</div>
-      <div class="p-4 hover:bg-gray-900 rounded-lg transition">Needs quant expertise</div>
-      <div class="p-4 hover:bg-gray-900 rounded-lg transition">Excel doesn’t scale</div>
-      <div class="p-4 hover:bg-gray-900 rounded-lg transition">No decision APIs</div>
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section class="py-20 px-6 max-w-6xl mx-auto">
-    <h3 class="text-3xl font-semibold text-center mb-12">
-      Everything you need
-    </h3>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-
-      <div class="glass p-6 rounded-xl border border-gray-800 hover:border-green-400 transition hover:-translate-y-1">
-        <h4 class="text-green-400 font-semibold">Options Engine</h4>
-        <p class="mt-2 text-gray-400 text-sm">Pricing + Greeks</p>
-      </div>
-
-      <div class="glass p-6 rounded-xl border border-gray-800 hover:border-blue-400 transition hover:-translate-y-1">
-        <h4 class="text-blue-400 font-semibold">Strategy</h4>
-        <p class="mt-2 text-gray-400 text-sm">Payoff + breakeven</p>
-      </div>
-
-      <div class="glass p-6 rounded-xl border border-gray-800 hover:border-red-400 transition hover:-translate-y-1">
-        <h4 class="text-red-400 font-semibold">Risk</h4>
-        <p class="mt-2 text-gray-400 text-sm">VaR, ES</p>
-      </div>
-
-      <div class="glass p-6 rounded-xl border border-gray-800 hover:border-yellow-400 transition hover:-translate-y-1">
-        <h4 class="text-yellow-400 font-semibold">Multi-Asset</h4>
-        <p class="mt-2 text-gray-400 text-sm">Options, Bonds, FX</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- AI AGENTS SECTION -->
-  <section class="py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900 border-t border-gray-800">
-
-    <div class="max-w-6xl mx-auto text-center">
-
-      <h3 class="text-4xl font-bold">
-        Built for AI Agents
-      </h3>
-
-      <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
-        QuantForge acts as the computation engine behind AI trading agents — enabling real-time pricing, decision-making, and risk monitoring.
-      </p>
-
-      <div class="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-
-        <div class="glass p-6 rounded-xl border border-gray-800 hover:border-green-400 transition hover:-translate-y-1">
-          <h4 class="text-green-400 font-semibold text-lg">📊 Pricing</h4>
-          <p class="mt-3 text-gray-400 text-sm">
-            Price options instantly using advanced models and volatility surfaces.
-          </p>
+      <!-- Brand -->
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-forge-green to-forge-teal flex items-center justify-center">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 6L9 9L12 4L14 6" stroke="#030712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="font-bold text-white">Quant<span class="grad-green">Forge</span></span>
         </div>
-
-        <div class="glass p-6 rounded-xl border border-gray-800 hover:border-blue-400 transition hover:-translate-y-1">
-          <h4 class="text-blue-400 font-semibold text-lg">🧠 Decisions</h4>
-          <p class="mt-3 text-gray-400 text-sm">
-            Generate trade insights, evaluate strategies, and simulate outcomes.
-          </p>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Financial intelligence APIs for developers and AI systems.
+        </p>
+        <div class="mt-4 flex gap-3">
+          <a href="#" class="w-8 h-8 glass border border-gray-800 rounded-lg flex items-center justify-center text-gray-500 hover:text-white hover:border-gray-600 transition-all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </a>
+          <a href="#" class="w-8 h-8 glass border border-gray-800 rounded-lg flex items-center justify-center text-gray-500 hover:text-white hover:border-gray-600 transition-all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          </a>
         </div>
-
-        <div class="glass p-6 rounded-xl border border-gray-800 hover:border-yellow-400 transition hover:-translate-y-1">
-          <h4 class="text-yellow-400 font-semibold text-lg">📡 Monitoring</h4>
-          <p class="mt-3 text-gray-400 text-sm">
-            Track market conditions, volatility shifts, and portfolio changes.
-          </p>
-        </div>
-
-        <div class="glass p-6 rounded-xl border border-gray-800 hover:border-red-400 transition hover:-translate-y-1">
-          <h4 class="text-red-400 font-semibold text-lg">⚠️ Risk</h4>
-          <p class="mt-3 text-gray-400 text-sm">
-            Compute VaR, Greeks, and exposures dynamically for risk control.
-          </p>
-        </div>
-
       </div>
 
-      <div class="mt-16 glass border border-gray-800 rounded-xl p-6 text-left text-sm max-w-3xl mx-auto">
-<pre><code>
-AI Agent → QuantForge API
+      <!-- Links -->
+      <div>
+        <div class="text-xs text-gray-600 uppercase tracking-widest font-mono mb-4">Product</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Features</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Pricing</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Changelog</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Roadmap</a></li>
+        </ul>
+      </div>
 
-→ Price option
-→ Evaluate strategy
-→ Assess risk
-→ Execute decision
+      <div>
+        <div class="text-xs text-gray-600 uppercase tracking-widest font-mono mb-4">Developers</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="text-gray-500 hover:text-white transition">API Reference</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Quickstart</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">SDKs</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Status</a></li>
+        </ul>
+      </div>
 
-All in milliseconds
-</code></pre>
+      <div>
+        <div class="text-xs text-gray-600 uppercase tracking-widest font-mono mb-4">Company</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="text-gray-500 hover:text-white transition">About</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Blog</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Contact</a></li>
+          <li><a href="#" class="text-gray-500 hover:text-white transition">Privacy</a></li>
+        </ul>
       </div>
 
     </div>
-  </section>
 
-  <!-- CTA -->
-  <section class="py-24 text-center border-t border-gray-800">
-    <h3 class="text-3xl font-semibold">
-      Start building financial intelligence
-    </h3>
-
-    <p class="text-gray-400 mt-4">
-      Available instantly on RapidAPI
-    </p>
-
-    <div class="mt-8">
-      <button class="bg-green-500 text-black px-8 py-4 rounded-lg font-semibold hover:bg-green-400 transition transform hover:scale-105">
-        🚀 Launch on RapidAPI
-      </button>
+    <div class="border-t border-gray-800/60 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="text-gray-600 text-sm font-mono">© 2024 QuantForge. Built for developers.</div>
+      <div class="flex items-center gap-2 text-sm">
+        <span class="w-2 h-2 rounded-full bg-forge-green animate-pulse"></span>
+        <span class="text-gray-600 font-mono">All systems operational</span>
+      </div>
     </div>
-  </section>
 
-  <!-- FOOTER -->
-  <footer class="py-6 text-center text-gray-500 text-sm border-t border-gray-800">
-    Built for developers • QuantForge
-  </footer>
+  </div>
+</footer>
 
-  <!-- SCRIPT -->
-  <script>
-    function switchTab(type) {
-      const block = document.getElementById("codeBlock");
 
-      if (type === "price") {
-        block.innerText = `POST /option-price
-
-{
-  "spot": 100,
-  "strike": 100
-}
-
-→
-
-{
-  "price": 10.45,
-  "delta": 0.52
-}`;
+<!-- ══════════════════════════════════════════
+  SCRIPTS
+══════════════════════════════════════════ -->
+<script>
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
       }
+    });
+  }, { threshold: 0.1 });
 
-      if (type === "strategy") {
-        block.innerText = `POST /strategy
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-{
-  "type": "bull_call_spread"
-}
+  // ── Endpoint switcher ──
+  const endpoints = {
+    price: {
+      title: 'POST /v2/option-price',
+      code: `<span class="code-comment">// Options Pricing</span>
 
-→
+<span class="code-method">POST</span> <span class="code-url">/v2/option-price</span>
 
-{
-  "max_profit": 120,
-  "breakeven": 105
-}`;
-      }
+<span class="code-arrow">{</span>
+  <span class="code-key">"spot"</span>:   <span class="code-num">185.50</span>,
+  <span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,
+  <span class="code-key">"expiry"</span>: <span class="code-str">"2024-04-19"</span>,
+  <span class="code-key">"vol"</span>:    <span class="code-num">0.28</span>,
+  <span class="code-key">"type"</span>:   <span class="code-str">"call"</span>,
+  <span class="code-key">"model"</span>:  <span class="code-str">"black_scholes"</span>
+<span class="code-arrow">}</span>
 
-      if (type === "risk") {
-        block.innerText = `POST /risk
+<span class="code-comment">// → { "price": 4.82, "delta": 0.38 }</span>`
+    },
+    greeks: {
+      title: 'POST /v2/greeks',
+      code: `<span class="code-comment">// Full Greeks Computation</span>
 
-{
-  "portfolio": [...]
-}
+<span class="code-method">POST</span> <span class="code-url">/v2/greeks</span>
 
-→
+<span class="code-arrow">{</span>
+  <span class="code-key">"spot"</span>:   <span class="code-num">185.50</span>,
+  <span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,
+  <span class="code-key">"vol"</span>:    <span class="code-num">0.28</span>
+<span class="code-arrow">}</span>
 
-{
-  "VaR": 5000,
-  "ES": 7200
-}`;
-      }
+<span class="code-comment">// → { delta: 0.384, gamma: 0.029,</span>
+<span class="code-comment">//     theta: -0.124, vega: 0.218 }</span>`
+    },
+    strategy: {
+      title: 'POST /v2/strategy/analyze',
+      code: `<span class="code-comment">// Strategy Analysis</span>
 
-      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("text-green-400"));
-      event.target.classList.add("text-green-400");
+<span class="code-method">POST</span> <span class="code-url">/v2/strategy/analyze</span>
+
+<span class="code-arrow">{</span>
+  <span class="code-key">"type"</span>: <span class="code-str">"bull_call_spread"</span>,
+  <span class="code-key">"legs"</span>: <span class="code-arrow">[</span>
+    <span class="code-arrow">{</span> <span class="code-key">"strike"</span>: <span class="code-num">185</span>, <span class="code-key">"action"</span>: <span class="code-str">"buy"</span> <span class="code-arrow">}</span>,
+    <span class="code-arrow">{</span> <span class="code-key">"strike"</span>: <span class="code-num">195</span>, <span class="code-key">"action"</span>: <span class="code-str">"sell"</span> <span class="code-arrow">}</span>
+  <span class="code-arrow">]</span>
+<span class="code-arrow">}</span>
+
+<span class="code-comment">// → { max_profit: 840, breakeven: 191.30 }</span>`
+    },
+    risk: {
+      title: 'POST /v2/risk/portfolio',
+      code: `<span class="code-comment">// Portfolio Risk</span>
+
+<span class="code-method">POST</span> <span class="code-url">/v2/risk/portfolio</span>
+
+<span class="code-arrow">{</span>
+  <span class="code-key">"positions"</span>: <span class="code-arrow">[</span>
+    <span class="code-arrow">{</span> <span class="code-key">"symbol"</span>: <span class="code-str">"AAPL"</span>, <span class="code-key">"qty"</span>: <span class="code-num">100</span> <span class="code-arrow">}</span>
+  <span class="code-arrow">]</span>,
+  <span class="code-key">"confidence"</span>: <span class="code-num">0.95</span>,
+  <span class="code-key">"horizon_days"</span>: <span class="code-num">1</span>
+<span class="code-arrow">}</span>
+
+<span class="code-comment">// → { VaR: 1240, ES: 1890, beta: 1.12 }</span>`
+    },
+    vol: {
+      title: 'POST /v2/volatility/surface',
+      code: `<span class="code-comment">// Volatility Surface</span>
+
+<span class="code-method">POST</span> <span class="code-url">/v2/volatility/surface</span>
+
+<span class="code-arrow">{</span>
+  <span class="code-key">"underlying"</span>: <span class="code-str">"SPY"</span>,
+  <span class="code-key">"model"</span>: <span class="code-str">"sabr"</span>,
+  <span class="code-key">"strikes"</span>: <span class="code-arrow">[</span><span class="code-num">480</span>, <span class="code-num">490</span>, <span class="code-num">500</span>, <span class="code-num">510</span><span class="code-arrow">]</span>
+<span class="code-arrow">}</span>
+
+<span class="code-comment">// → { surface: [[...]], atm_vol: 0.18 }</span>`
+    },
+    bond: {
+      title: 'POST /v2/bond/price',
+      code: `<span class="code-comment">// Bond Analytics</span>
+
+<span class="code-method">POST</span> <span class="code-url">/v2/bond/price</span>
+
+<span class="code-arrow">{</span>
+  <span class="code-key">"face_value"</span>: <span class="code-num">1000</span>,
+  <span class="code-key">"coupon_rate"</span>: <span class="code-num">0.045</span>,
+  <span class="code-key">"maturity"</span>: <span class="code-str">"2029-01-15"</span>,
+  <span class="code-key">"yield"</span>: <span class="code-num">0.052</span>
+<span class="code-arrow">}</span>
+
+<span class="code-comment">// → { price: 971.20, duration: 4.8 }</span>`
+    },
+    implied: {
+      title: 'POST /v2/implied-vol',
+      code: `<span class="code-comment">// Implied Volatility Solver</span>
+
+<span class="code-method">POST</span> <span class="code-url">/v2/implied-vol</span>
+
+<span class="code-arrow">{</span>
+  <span class="code-key">"market_price"</span>: <span class="code-num">4.82</span>,
+  <span class="code-key">"spot"</span>: <span class="code-num">185.50</span>,
+  <span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,
+  <span class="code-key">"type"</span>: <span class="code-str">"call"</span>
+<span class="code-arrow">}</span>
+
+<span class="code-comment">// → { implied_vol: 0.2812 }</span>`
+    },
+    health: {
+      title: 'GET /v2/health',
+      code: `<span class="code-comment">// Health Check</span>
+
+<span class="code-method">GET</span> <span class="code-url">/v2/health</span>
+
+<span class="code-comment">// Response 200 OK</span>
+<span class="code-arrow">{</span>
+  <span class="code-key">"status"</span>: <span class="code-str">"operational"</span>,
+  <span class="code-key">"latency_ms"</span>: <span class="code-num">8</span>,
+  <span class="code-key">"version"</span>: <span class="code-str">"2.4.1"</span>,
+  <span class="code-key">"uptime"</span>: <span class="code-str">"99.97%"</span>
+<span class="code-arrow">}</span>`
     }
-  </script>
+  };
+
+  function showEndpoint(key) {
+    const ep = endpoints[key];
+    if (!ep) return;
+    document.getElementById('endpointTitle').textContent = ep.title;
+    document.getElementById('endpointCode').innerHTML = ep.code;
+    document.querySelectorAll('.endpoint-row').forEach(r => r.classList.remove('active-endpoint'));
+    event.currentTarget.classList.add('active-endpoint');
+  }
+
+  // Active endpoint style
+  const style = document.createElement('style');
+  style.textContent = `.active-endpoint { border-color: rgba(0,255,135,0.4) !important; background: rgba(0,255,135,0.05) !important; }`;
+  document.head.appendChild(style);
+</script>
 
 </body>
 </html>
