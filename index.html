@@ -382,32 +382,31 @@
           <!-- Request -->
           <div class="p-6">
             <div class="text-xs text-gray-600 uppercase tracking-widest mb-4 font-mono">Request</div>
-            <pre class="text-sm font-mono leading-relaxed"><span class="code-method">POST</span> <span class="code-url">https://api.voltrix.io/v2/option-price</span>
+            <pre class="text-sm font-mono leading-relaxed"><span class="code-method">POST</span> <span class="code-url">https://api.voltrix.io/v2/options/price</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"underlying"</span>: <span class="code-str">"AAPL"</span>,
-  <span class="code-key">"spot"</span>:       <span class="code-num">185.50</span>,
-  <span class="code-key">"strike"</span>:     <span class="code-num">190.00</span>,
-  <span class="code-key">"expiry"</span>:     <span class="code-str">"2024-04-19"</span>,
-  <span class="code-key">"vol"</span>:        <span class="code-num">0.28</span>,
-  <span class="code-key">"type"</span>:       <span class="code-str">"call"</span>,
-  <span class="code-key">"model"</span>:      <span class="code-str">"black_scholes"</span>
+  <span class="code-key">"model"</span>:           <span class="code-str">"black_scholes"</span>,
+  <span class="code-key">"option_type"</span>:     <span class="code-str">"call"</span>,
+  <span class="code-key">"spot"</span>:            <span class="code-num">100</span>,
+  <span class="code-key">"strike"</span>:          <span class="code-num">105</span>,
+  <span class="code-key">"rate"</span>:            <span class="code-num">0.05</span>,
+  <span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,
+  <span class="code-key">"expiry_date"</span>:     <span class="code-str">"2027-01-01"</span>,
+  <span class="code-key">"volatility"</span>:      <span class="code-num">0.2</span>
 <span class="code-arrow">}</span></pre>
           </div>
           <!-- Response -->
           <div class="p-6">
             <div class="text-xs text-gray-600 uppercase tracking-widest mb-4 font-mono">Response <span class="text-forge-green">200 OK</span></div>
             <pre class="text-sm font-mono leading-relaxed"><span class="code-arrow">{</span>
-  <span class="code-key">"price"</span>:        <span class="code-num">4.82</span>,
-  <span class="code-key">"greeks"</span>: <span class="code-arrow">{</span>
-    <span class="code-key">"delta"</span>:  <span class="code-num">0.3847</span>,
-    <span class="code-key">"gamma"</span>:  <span class="code-num">0.0291</span>,
-    <span class="code-key">"theta"</span>:  <span class="code-num">-0.124</span>,
-    <span class="code-key">"vega"</span>:   <span class="code-num">0.2183</span>,
-    <span class="code-key">"rho"</span>:    <span class="code-num">0.0847</span>
-  <span class="code-arrow">}</span>,
-  <span class="code-key">"iv"</span>:          <span class="code-num">0.2812</span>,
-  <span class="code-key">"latency_ms"</span>:  <span class="code-num">12</span>
+  <span class="code-key">"price"</span>:               <span class="code-num">8.73</span>,
+  <span class="code-key">"time_to_expiry_days"</span>: <span class="code-num">365</span>,
+  <span class="code-key">"model_used"</span>:         <span class="code-str">"black_scholes"</span>,
+  <span class="code-key">"volatility_used"</span>: <span class="code-arrow">{</span>
+    <span class="code-key">"value"</span>:        <span class="code-num">0.2</span>,
+    <span class="code-key">"source"</span>:       <span class="code-str">"constant"</span>,
+    <span class="code-key">"surface_type"</span>: <span class="code-str">"constant"</span>
+  <span class="code-arrow">}</span>
 <span class="code-arrow">}</span></pre>
           </div>
         </div>
@@ -681,42 +680,42 @@
 
         <div class="endpoint-row active-endpoint" onclick="showEndpoint('price')">
           <span class="method-post">POST</span>
-          <span class="text-gray-300">/v2/option-price</span>
-          <span class="ml-auto text-gray-600 text-xs">BSM · Binomial · MC</span>
+          <span class="text-gray-300">/v2/options/price</span>
+          <span class="ml-auto text-gray-600 text-xs">BSM · Bachelier · MC</span>
         </div>
         <div class="endpoint-row" onclick="showEndpoint('greeks')">
           <span class="method-post">POST</span>
-          <span class="text-gray-300">/v2/greeks</span>
+          <span class="text-gray-300">/v2/options/greeks</span>
           <span class="ml-auto text-gray-600 text-xs">Δ Γ Θ ν ρ</span>
         </div>
         <div class="endpoint-row" onclick="showEndpoint('strategy')">
           <span class="method-post">POST</span>
-          <span class="text-gray-300">/v2/strategy/analyze</span>
+          <span class="text-gray-300">/v2/options/strategies</span>
           <span class="ml-auto text-gray-600 text-xs">Multi-leg</span>
         </div>
-        <div class="endpoint-row" onclick="showEndpoint('risk')">
+        <div class="endpoint-row" onclick="showEndpoint('npv')">
           <span class="method-post">POST</span>
-          <span class="text-gray-300">/v2/risk/portfolio</span>
-          <span class="ml-auto text-gray-600 text-xs">VaR · ES</span>
+          <span class="text-gray-300">/v2/core/npv</span>
+          <span class="ml-auto text-gray-600 text-xs">NPV · Cashflows</span>
         </div>
         <div class="endpoint-row" onclick="showEndpoint('vol')">
           <span class="method-post">POST</span>
-          <span class="text-gray-300">/v2/volatility/surface</span>
-          <span class="ml-auto text-gray-600 text-xs">SABR · SVI</span>
+          <span class="text-gray-300">/v2/options/volatility</span>
+          <span class="ml-auto text-gray-600 text-xs">IV · Historical</span>
         </div>
         <div class="endpoint-row" onclick="showEndpoint('bond')">
           <span class="method-post">POST</span>
-          <span class="text-gray-300">/v2/bond/price</span>
+          <span class="text-gray-300">/v2/bonds/price</span>
           <span class="ml-auto text-gray-600 text-xs">Fixed income</span>
         </div>
-        <div class="endpoint-row" onclick="showEndpoint('implied')">
+        <div class="endpoint-row" onclick="showEndpoint('bondyield')">
           <span class="method-post">POST</span>
-          <span class="text-gray-300">/v2/implied-vol</span>
-          <span class="ml-auto text-gray-600 text-xs">IV solver</span>
+          <span class="text-gray-300">/v2/bonds/yield</span>
+          <span class="ml-auto text-gray-600 text-xs">YTM solver</span>
         </div>
         <div class="endpoint-row" onclick="showEndpoint('health')">
           <span class="method-get">GET</span>
-          <span class="text-gray-300">/v2/health</span>
+          <span class="text-gray-300">/health</span>
           <span class="ml-auto text-gray-600 text-xs">Status</span>
         </div>
       </div>
@@ -727,22 +726,23 @@
           <div class="dot bg-red-500"></div>
           <div class="dot bg-yellow-500"></div>
           <div class="dot bg-green-500"></div>
-          <span class="ml-2 text-gray-500 text-xs font-mono" id="endpointTitle">POST /v2/option-price</span>
+          <span class="ml-2 text-gray-500 text-xs font-mono" id="endpointTitle">POST /v2/options/price</span>
         </div>
         <div class="p-6 font-mono text-sm leading-relaxed" id="endpointCode">
           <span class="code-comment">// Option Pricing Request</span><br><br>
-          <span class="code-method">POST</span> <span class="code-url">/v2/option-price</span><br>
+          <span class="code-method">POST</span> <span class="code-url">/v2/options/price</span><br>
           <span class="code-key">Authorization:</span> <span class="code-str">Bearer YOUR_API_KEY</span><br><br>
           <span class="code-arrow">{</span><br>
-          &nbsp;&nbsp;<span class="code-key">"spot"</span>: <span class="code-num">185.50</span>,<br>
-          &nbsp;&nbsp;<span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,<br>
-          &nbsp;&nbsp;<span class="code-key">"expiry"</span>: <span class="code-str">"2024-04-19"</span>,<br>
-          &nbsp;&nbsp;<span class="code-key">"vol"</span>: <span class="code-num">0.28</span>,<br>
-          &nbsp;&nbsp;<span class="code-key">"rate"</span>: <span class="code-num">0.053</span>,<br>
-          &nbsp;&nbsp;<span class="code-key">"type"</span>: <span class="code-str">"call"</span>,<br>
-          &nbsp;&nbsp;<span class="code-key">"model"</span>: <span class="code-str">"black_scholes"</span><br>
+          &nbsp;&nbsp;<span class="code-key">"model"</span>: <span class="code-str">"black_scholes"</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"option_type"</span>: <span class="code-str">"call"</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"spot"</span>: <span class="code-num">100</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"strike"</span>: <span class="code-num">105</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"rate"</span>: <span class="code-num">0.05</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"expiry_date"</span>: <span class="code-str">"2027-01-01"</span>,<br>
+          &nbsp;&nbsp;<span class="code-key">"volatility"</span>: <span class="code-num">0.2</span><br>
           <span class="code-arrow">}</span><br><br>
-          <span class="code-comment">// → { "price": 4.82, "delta": 0.38, ... }</span>
+          <span class="code-comment">// → { "price": 8.73, "model_used": "black_scholes" }</span>
         </div>
       </div>
 
@@ -814,12 +814,12 @@
           </div>
           <div class="p-6 font-mono text-sm leading-relaxed space-y-1">
             <div><span class="text-gray-600">[09:31:02]</span> <span class="text-forge-green">→</span> Agent initialized: AAPL options session</div>
-            <div><span class="text-gray-600">[09:31:03]</span> <span class="text-blue-400">↑</span> POST /v2/option-price {spot: 185.50, ...}</div>
-            <div><span class="text-gray-600">[09:31:03]</span> <span class="text-forge-green">✓</span> price: <span class="text-forge-green">4.82</span>, delta: <span class="text-forge-green">0.384</span> <span class="text-gray-600">[12ms]</span></div>
-            <div><span class="text-gray-600">[09:31:04]</span> <span class="text-blue-400">↑</span> POST /v2/strategy/analyze {type: "bull_call_spread"}</div>
-            <div><span class="text-gray-600">[09:31:04]</span> <span class="text-forge-green">✓</span> max_profit: <span class="text-forge-green">$840</span>, breakeven: <span class="text-yellow-400">$191.30</span></div>
-            <div><span class="text-gray-600">[09:31:05]</span> <span class="text-blue-400">↑</span> POST /v2/risk/portfolio {positions: [...]}</div>
-            <div><span class="text-gray-600">[09:31:05]</span> <span class="text-forge-green">✓</span> 95% VaR: <span class="text-red-400">$1,240</span>, ES: <span class="text-red-400">$1,890</span></div>
+            <div><span class="text-gray-600">[09:31:03]</span> <span class="text-blue-400">↑</span> POST /v2/options/price {spot: 100, strike: 105, ...}</div>
+            <div><span class="text-gray-600">[09:31:03]</span> <span class="text-forge-green">✓</span> price: <span class="text-forge-green">8.73</span>, model_used: <span class="text-forge-green">black_scholes</span> <span class="text-gray-600">[12ms]</span></div>
+            <div><span class="text-gray-600">[09:31:04]</span> <span class="text-blue-400">↑</span> POST /v2/options/strategies {legs: [...]}</div>
+            <div><span class="text-gray-600">[09:31:04]</span> <span class="text-forge-green">✓</span> strategy: <span class="text-forge-green">bull_call_spread</span>, max_profit: <span class="text-forge-green">5.0</span>, breakeven: <span class="text-yellow-400">105.0</span></div>
+            <div><span class="text-gray-600">[09:31:05]</span> <span class="text-blue-400">↑</span> POST /v2/options/greeks {spot: 100, strike: 105, ...}</div>
+            <div><span class="text-gray-600">[09:31:05]</span> <span class="text-forge-green">✓</span> delta: <span class="text-forge-green">0.43</span>, vega: <span class="text-forge-green">0.37</span>, theta: <span class="text-red-400">-0.017</span></div>
             <div class="mt-3 pt-3 border-t border-gray-800">
               <span class="text-gray-600">[09:31:06]</span> <span class="text-purple-400">🤖</span> Agent decision: <span class="text-forge-green font-bold">BUY</span> 5x Apr-19 190C
             </div>
@@ -1161,125 +1161,143 @@
   // ── Endpoint switcher ──
   const endpoints = {
     price: {
-      title: 'POST /v2/option-price',
-      code: `<span class="code-comment">// Options Pricing</span>
+      title: 'POST /v2/options/price',
+      code: `<span class="code-comment">// Option Pricing</span>
 
-<span class="code-method">POST</span> <span class="code-url">/v2/option-price</span>
+<span class="code-method">POST</span> <span class="code-url">/v2/options/price</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"spot"</span>:   <span class="code-num">185.50</span>,
-  <span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,
-  <span class="code-key">"expiry"</span>: <span class="code-str">"2024-04-19"</span>,
-  <span class="code-key">"vol"</span>:    <span class="code-num">0.28</span>,
-  <span class="code-key">"type"</span>:   <span class="code-str">"call"</span>,
-  <span class="code-key">"model"</span>:  <span class="code-str">"black_scholes"</span>
+  <span class="code-key">"model"</span>:           <span class="code-str">"black_scholes"</span>,
+  <span class="code-key">"option_type"</span>:     <span class="code-str">"call"</span>,
+  <span class="code-key">"spot"</span>:            <span class="code-num">100</span>,
+  <span class="code-key">"strike"</span>:          <span class="code-num">105</span>,
+  <span class="code-key">"rate"</span>:            <span class="code-num">0.05</span>,
+  <span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,
+  <span class="code-key">"expiry_date"</span>:     <span class="code-str">"2027-01-01"</span>,
+  <span class="code-key">"volatility"</span>:      <span class="code-num">0.2</span>
 <span class="code-arrow">}</span>
 
-<span class="code-comment">// → { "price": 4.82, "delta": 0.38 }</span>`
+<span class="code-comment">// → { "price": 8.73, "model_used": "black_scholes" }</span>`
     },
     greeks: {
-      title: 'POST /v2/greeks',
-      code: `<span class="code-comment">// Full Greeks Computation</span>
+      title: 'POST /v2/options/greeks',
+      code: `<span class="code-comment">// Greeks Computation</span>
 
-<span class="code-method">POST</span> <span class="code-url">/v2/greeks</span>
+<span class="code-method">POST</span> <span class="code-url">/v2/options/greeks</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"spot"</span>:   <span class="code-num">185.50</span>,
-  <span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,
-  <span class="code-key">"vol"</span>:    <span class="code-num">0.28</span>
+  <span class="code-key">"option_type"</span>:     <span class="code-str">"call"</span>,
+  <span class="code-key">"spot"</span>:            <span class="code-num">100</span>,
+  <span class="code-key">"strike"</span>:          <span class="code-num">105</span>,
+  <span class="code-key">"rate"</span>:            <span class="code-num">0.05</span>,
+  <span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,
+  <span class="code-key">"expiry_date"</span>:     <span class="code-str">"2027-01-01"</span>,
+  <span class="code-key">"volatility"</span>:      <span class="code-num">0.2</span>,
+  <span class="code-key">"method"</span>:          <span class="code-str">"analytic"</span>
 <span class="code-arrow">}</span>
 
-<span class="code-comment">// → { delta: 0.384, gamma: 0.029,</span>
-<span class="code-comment">//     theta: -0.124, vega: 0.218 }</span>`
+<span class="code-comment">// → { delta: 0.43, gamma: 0.019,</span>
+<span class="code-comment">//     vega: 0.37, theta: -0.017, rho: 0.46 }</span>`
     },
     strategy: {
-      title: 'POST /v2/strategy/analyze',
-      code: `<span class="code-comment">// Strategy Analysis</span>
+      title: 'POST /v2/options/strategies',
+      code: `<span class="code-comment">// Multi-leg Strategy Analysis</span>
 
-<span class="code-method">POST</span> <span class="code-url">/v2/strategy/analyze</span>
+<span class="code-method">POST</span> <span class="code-url">/v2/options/strategies</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"type"</span>: <span class="code-str">"bull_call_spread"</span>,
+  <span class="code-key">"spot"</span>:            <span class="code-num">100</span>,
+  <span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,
   <span class="code-key">"legs"</span>: <span class="code-arrow">[</span>
-    <span class="code-arrow">{</span> <span class="code-key">"strike"</span>: <span class="code-num">185</span>, <span class="code-key">"action"</span>: <span class="code-str">"buy"</span> <span class="code-arrow">}</span>,
-    <span class="code-arrow">{</span> <span class="code-key">"strike"</span>: <span class="code-num">195</span>, <span class="code-key">"action"</span>: <span class="code-str">"sell"</span> <span class="code-arrow">}</span>
+    <span class="code-arrow">{</span> <span class="code-key">"type"</span>: <span class="code-str">"call"</span>, <span class="code-key">"position"</span>: <span class="code-str">"long"</span>,  <span class="code-key">"strike"</span>: <span class="code-num">100</span>, <span class="code-key">"expiry_date"</span>: <span class="code-str">"2027-01-01"</span>, <span class="code-key">"premium"</span>: <span class="code-num">10</span> <span class="code-arrow">}</span>,
+    <span class="code-arrow">{</span> <span class="code-key">"type"</span>: <span class="code-str">"call"</span>, <span class="code-key">"position"</span>: <span class="code-str">"short"</span>, <span class="code-key">"strike"</span>: <span class="code-num">110</span>, <span class="code-key">"expiry_date"</span>: <span class="code-str">"2027-01-01"</span>, <span class="code-key">"premium"</span>: <span class="code-num">5</span>  <span class="code-arrow">}</span>
   <span class="code-arrow">]</span>
 <span class="code-arrow">}</span>
 
-<span class="code-comment">// → { max_profit: 840, breakeven: 191.30 }</span>`
+<span class="code-comment">// → { strategy: "bull_call_spread", max_profit: 5.0,</span>
+<span class="code-comment">//     max_loss: -5.0, breakevens: [105.0] }</span>`
     },
-    risk: {
-      title: 'POST /v2/risk/portfolio',
-      code: `<span class="code-comment">// Portfolio Risk</span>
+    npv: {
+      title: 'POST /v2/core/npv',
+      code: `<span class="code-comment">// Net Present Value</span>
 
-<span class="code-method">POST</span> <span class="code-url">/v2/risk/portfolio</span>
+<span class="code-method">POST</span> <span class="code-url">/v2/core/npv</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"positions"</span>: <span class="code-arrow">[</span>
-    <span class="code-arrow">{</span> <span class="code-key">"symbol"</span>: <span class="code-str">"AAPL"</span>, <span class="code-key">"qty"</span>: <span class="code-num">100</span> <span class="code-arrow">}</span>
+  <span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,
+  <span class="code-key">"cashflows"</span>: <span class="code-arrow">[</span>
+    <span class="code-arrow">{</span> <span class="code-key">"date"</span>: <span class="code-str">"2026-06-01"</span>, <span class="code-key">"amount"</span>: <span class="code-num">50</span>   <span class="code-arrow">}</span>,
+    <span class="code-arrow">{</span> <span class="code-key">"date"</span>: <span class="code-str">"2027-01-01"</span>, <span class="code-key">"amount"</span>: <span class="code-num">1050</span> <span class="code-arrow">}</span>
   <span class="code-arrow">]</span>,
-  <span class="code-key">"confidence"</span>: <span class="code-num">0.95</span>,
-  <span class="code-key">"horizon_days"</span>: <span class="code-num">1</span>
+  <span class="code-key">"discount_rate"</span>: <span class="code-num">0.05</span>,
+  <span class="code-key">"day_count"</span>:     <span class="code-str">"ACT/365"</span>
 <span class="code-arrow">}</span>
 
-<span class="code-comment">// → { VaR: 1240, ES: 1890, beta: 1.12 }</span>`
+<span class="code-comment">// → { "npv": 980.25, "details": { "discount_factors": [...] } }</span>`
     },
     vol: {
-      title: 'POST /v2/volatility/surface',
-      code: `<span class="code-comment">// Volatility Surface</span>
+      title: 'POST /v2/options/volatility',
+      code: `<span class="code-comment">// Historical Volatility</span>
 
-<span class="code-method">POST</span> <span class="code-url">/v2/volatility/surface</span>
+<span class="code-method">POST</span> <span class="code-url">/v2/options/volatility</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"underlying"</span>: <span class="code-str">"SPY"</span>,
-  <span class="code-key">"model"</span>: <span class="code-str">"sabr"</span>,
-  <span class="code-key">"strikes"</span>: <span class="code-arrow">[</span><span class="code-num">480</span>, <span class="code-num">490</span>, <span class="code-num">500</span>, <span class="code-num">510</span><span class="code-arrow">]</span>
+  <span class="code-key">"type"</span>:                 <span class="code-str">"historical"</span>,
+  <span class="code-key">"prices"</span>:               <span class="code-arrow">[</span><span class="code-num">100</span>, <span class="code-num">102</span>, <span class="code-num">101</span>, <span class="code-num">105</span>, <span class="code-num">107</span><span class="code-arrow">]</span>,
+  <span class="code-key">"method"</span>:               <span class="code-str">"log_returns"</span>,
+  <span class="code-key">"annualization_factor"</span>: <span class="code-num">252</span>
 <span class="code-arrow">}</span>
 
-<span class="code-comment">// → { surface: [[...]], atm_vol: 0.18 }</span>`
+<span class="code-comment">// → { "volatility": 0.2134, "type": "historical" }</span>`
     },
     bond: {
-      title: 'POST /v2/bond/price',
-      code: `<span class="code-comment">// Bond Analytics</span>
+      title: 'POST /v2/bonds/price',
+      code: `<span class="code-comment">// Bond Pricing</span>
 
-<span class="code-method">POST</span> <span class="code-url">/v2/bond/price</span>
+<span class="code-method">POST</span> <span class="code-url">/v2/bonds/price</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"face_value"</span>: <span class="code-num">1000</span>,
-  <span class="code-key">"coupon_rate"</span>: <span class="code-num">0.045</span>,
-  <span class="code-key">"maturity"</span>: <span class="code-str">"2029-01-15"</span>,
-  <span class="code-key">"yield"</span>: <span class="code-num">0.052</span>
+  <span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,
+  <span class="code-key">"maturity_date"</span>:   <span class="code-str">"2030-01-01"</span>,
+  <span class="code-key">"coupon_rate"</span>:     <span class="code-num">0.05</span>,
+  <span class="code-key">"face_value"</span>:      <span class="code-num">1000</span>,
+  <span class="code-key">"frequency"</span>:       <span class="code-str">"semi_annual"</span>,
+  <span class="code-key">"ytm"</span>:             <span class="code-num">0.045</span>,
+  <span class="code-key">"day_count"</span>:       <span class="code-str">"30/360"</span>
 <span class="code-arrow">}</span>
 
-<span class="code-comment">// → { price: 971.20, duration: 4.8 }</span>`
+<span class="code-comment">// → { price: 1025.6, accrued_interest: 12.5,</span>
+<span class="code-comment">//     clean_price: 1013.1 }</span>`
     },
-    implied: {
-      title: 'POST /v2/implied-vol',
-      code: `<span class="code-comment">// Implied Volatility Solver</span>
+    bondyield: {
+      title: 'POST /v2/bonds/yield',
+      code: `<span class="code-comment">// Yield-to-Maturity Solver</span>
 
-<span class="code-method">POST</span> <span class="code-url">/v2/implied-vol</span>
+<span class="code-method">POST</span> <span class="code-url">/v2/bonds/yield</span>
 
 <span class="code-arrow">{</span>
-  <span class="code-key">"market_price"</span>: <span class="code-num">4.82</span>,
-  <span class="code-key">"spot"</span>: <span class="code-num">185.50</span>,
-  <span class="code-key">"strike"</span>: <span class="code-num">190.00</span>,
-  <span class="code-key">"type"</span>: <span class="code-str">"call"</span>
+  <span class="code-key">"clean_price"</span>:     <span class="code-num">1013.1</span>,
+  <span class="code-key">"settlement_date"</span>: <span class="code-str">"2026-01-01"</span>,
+  <span class="code-key">"maturity_date"</span>:   <span class="code-str">"2030-01-01"</span>,
+  <span class="code-key">"coupon_rate"</span>:     <span class="code-num">0.05</span>,
+  <span class="code-key">"face_value"</span>:      <span class="code-num">1000</span>,
+  <span class="code-key">"frequency"</span>:       <span class="code-str">"semi_annual"</span>,
+  <span class="code-key">"day_count"</span>:       <span class="code-str">"30/360"</span>
 <span class="code-arrow">}</span>
 
-<span class="code-comment">// → { implied_vol: 0.2812 }</span>`
+<span class="code-comment">// → { "ytm": 0.045, "iterations": 5, "status": "converged" }</span>`
     },
     health: {
-      title: 'GET /v2/health',
+      title: 'GET /health',
       code: `<span class="code-comment">// Health Check</span>
 
-<span class="code-method">GET</span> <span class="code-url">/v2/health</span>
+<span class="code-method">GET</span> <span class="code-url">/health</span>
 
 <span class="code-comment">// Response 200 OK</span>
 <span class="code-arrow">{</span>
-  <span class="code-key">"status"</span>: <span class="code-str">"operational"</span>,
-  <span class="code-key">"latency_ms"</span>: <span class="code-num">8</span>,
-  <span class="code-key">"version"</span>: <span class="code-str">"2.4.1"</span>,
-  <span class="code-key">"uptime"</span>: <span class="code-str">"99.97%"</span>
+  <span class="code-key">"status"</span>:  <span class="code-str">"ok"</span>,
+  <span class="code-key">"service"</span>: <span class="code-str">"Voltrix API"</span>,
+  <span class="code-key">"version"</span>: <span class="code-str">"2.0.0"</span>
 <span class="code-arrow">}</span>`
     }
   };
